@@ -78,7 +78,7 @@ void WriteOut(const string& sFile, int a, int d)
     //out_file.close();
 }
 
-int main2()
+int main()
 {
     // Step1: read
     vector<long> cowMoney;
@@ -87,70 +87,8 @@ int main2()
     if (!bOk) { return 0; }
     //Print(nCows, cowMoney);
 
-    // Step2: get min/max, range
-    long maxPay = -INT_MAX, minPay = INT_MAX;
-    for (int m : cowMoney) {
-        if (m > maxPay)
-            maxPay = m;
-        if (m < minPay)
-            minPay = m;
-    }
-
-    // Step3: sort
-    sort(cowMoney.begin(), cowMoney.end());
-
-    // Step4: solve
-    long amount = 0;
-    long dollar = 0;
-    int nCows = cowMoney.size();
-    //for (int i = 0; i < cowMoney.size(); i++)
-    for (int iPay = minPay; iPay <= maxPay; iPay++)
-    {
-        //int iPay = cowMoney[i];
-        long localPay = 0;
-        for (int j = 0; j < nCows; j++)
-        {
-            if (cowMoney[j] >= iPay) {
-                localPay += iPay;
-            }
-        }
-
-        if (localPay > amount) {
-            amount = localPay;
-            dollar = iPay;
-        }
-    }
 
     WriteOut("collegeCows.out", amount, dollar);
-
-    return 0;
-}
-
-
-int main() {
-    int n; cin >> n;
-    std::vector<long long> maxTuition(n);
-    for (int i = 0; i < n; i++) {
-        cin >> maxTuition[i];
-    }
-
-    sort(maxTuition.begin(), maxTuition.end());
-
-    long long maxMoney = 0, bestTuition = 0;
-    int numberOfCowsWillingToAttend = n;
-    for (int i = 0; i < n; i++) 
-    {
-        long long setTuitionToIthCowsetTuitionToIthCow = maxTuition[i] * numberOfCowsWillingToAttend;
-
-        if (setTuitionToIthCow > maxMoney) {
-            maxMoney = setTuitionToIthCow;
-            bestTuition = maxTuition[i];
-        }
-
-        numberOfCowsWillingToAttend--; // The ith cow isn't willing to pay any more tuition
-    }
-
-    cout << maxMoney << " " << bestTuition << endl;
 
     return 0;
 }
