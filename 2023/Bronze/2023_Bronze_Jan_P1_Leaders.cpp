@@ -39,7 +39,7 @@ bool ReadIn(const std::string& sFile, int& nCows, vector<string>& vecTypes, vect
     for (int i = 0; i < nCows; ++i) {
         int ei;
         in_file >> ei;
-        vecE.push_back(ei);
+        vecE.push_back(ei - 1);
     }
 
     return true;
@@ -63,7 +63,7 @@ bool ReadIn(int& nCows, vector<string>& vecTypes, vector<int>& vecE)
     for (int i = 0; i < nCows; ++i) {
         int ei;
         cin >> ei;
-        vecE.push_back(ei);
+        vecE.push_back(ei-1);
     }
 
     return true;
@@ -119,91 +119,90 @@ bool isLeader2(int id, const string& s, const vector<int>& leaders, const vector
 int main()
 {
     int nCows = 0;
-    vector<string> vecTypes;
-    vector<int> vecE;
-    //bool bOk = ReadIn("leaders.in", nCows, vecTypes, vecE);
-    bool bOk = ReadIn(nCows, vecTypes, vecE);
+    vector<string> s;
+    vector<int> arr;
+    //bool bOk = ReadIn("prob1_bronze_jan23/1.in", nCows, s, arr);
+    bool bOk = ReadIn(nCows, s, arr);
     if (!bOk) { return 0; }
-
     //Print(vecTypes, vecE);
 
-    int nGs = 0, nHs = 0;
-    for (string s : vecTypes) {
-        if (s == "G")
-            nGs++;
-        else
-            nHs++;
+    // step 1
+    int eG = 0, lG=0, eH=0, lH=0;
+    int ans =0;
+
+    for (int i = 0; i < nCows; i++)
+    {
+        if (s[i] == "G")
+        {
+            eG = i;
+            break;
+        }
     }
 
-    // step 1
-    vector<int> leaders;
-    for (int i = 0; i < nCows; ++i) {
-        int count = 0;
-        string sType = vecTypes[i];
-        for (int j = i; j <= vecE[i] - 1; ++j) {
-            string sType2 = vecTypes[j];
-            if (sType == sType2)
-                count++;
-        }
-
-        if ((count == nGs && sType == "G") || (count == nHs && sType == "H"))
+    for (int i = 0; i < nCows; i++)
+    {
+        if (s[nCows - i - 1] == "G")
         {
-            leaders.push_back(i);
+            lG = nCows - i - 1;
+            break;
+        }
+    }
+
+    for (int i = 0; i < nCows; i++)
+    {
+        if (s[i] == "H")
+        {
+            eH = i;
+            break;
+        }
+    }
+
+    for (int i = 0; i < nCows; i++)
+    {
+        if (s[nCows - i - 1] == "H")
+        {
+            lH = nCows - i - 1;
+            break;
         }
     }
 
     // step 2
-    vector<pair<int, int>> pairs;
-    for (int i = 0; i < nCows; ++i) {
-        if (isLeader(i, leaders))
-            continue;
+    if (arr[eG] >= lG)
+    {
+        for (int i = 0; i < eG; i++)
+        {
+            if (i == eH) {
+                continue;
+            }
 
-        for (int j = i; j < nCows; ++j) {
-            string sType2 = vecTypes[j];
-            if (isLeader2(j, sType2, leaders, vecTypes))
-                pairs.push_back(pair<int, int>(i, j));
+            if (s[i] == "H" && arr[i] >= eG)
+            {
+                ans++;
+            }
         }
     }
 
     // step 3
-    for (int i = 0; i < leaders.size(); ++i) {
-        for (int j = i; j < leaders.size(); ++j) {
-            if (vecTypes[i] == vecTypes[j])
+    if (arr[eH] >= lH)
+    {
+        for (int i = 0; i < eH; i++)
+        {
+            if (i == eG) {
                 continue;
+            }
 
-            pairs.push_back(pair<int, int>(i, j));
+            if (s[i] == "G" && arr[i] >= eH)
+            {
+                ans++;
+            }
         }
     }
 
     // step 4
-    vector<pair<int, int>> pairs2;
-    for (pair<int, int> p : pairs) {
-        int pf = p.first;
-        int ps = p.second;
-        if (pf > ps) {
-            int temp = pf;
-            pf = ps;
-            ps = temp;
-        }
-        pairs2.push_back(pair<int, int>(pf, ps));
-    }
+    if ((arr[eG] >= lG || (eG < eH && arr[eG] >= eH)) && (arr[eH] >= lH || (eH < eG && arr[eH] >= eG)))
+        ans++;
 
-    // step 5, clean up
-    //vector<pair<int, int>> pairs3;
-    //for (int i = 0; i < pairs2.size(); ++i) {
-    //    int count = 0;
-    //    for (int j = i; j < pairs2.size(); ++j) {
-    //        if (pairs[i] == pairs[j]) {
-    //            count++;
-    //        }
-    //    }
-
-    //    if (!bFound) {
-    //        pairs3.push_back(pairs2[i]);
-    //    }
-    //}
-
-    WriteOut("leaders.out", pairs2.size());
+    WriteOut("leaders.out", ans);
 
     return 0;
 }
