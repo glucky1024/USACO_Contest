@@ -142,10 +142,10 @@ int main() {
     {
         long long setTuitionToIthCowsetTuitionToIthCow = maxTuition[i] * numberOfCowsWillingToAttend;
 
-        if (setTuitionToIthCow > maxMoney) {
-            maxMoney = setTuitionToIthCow;
-            bestTuition = maxTuition[i];
-        }
+        //if (setTuitionToIthCow > maxMoney) {
+        //    maxMoney = setTuitionToIthCow;
+        //    bestTuition = maxTuition[i];
+        //}
 
         numberOfCowsWillingToAttend--; // The ith cow isn't willing to pay any more tuition
     }
