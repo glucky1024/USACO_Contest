@@ -1,20 +1,141 @@
-// 2020_Bronze_Dec_P1_CowGymnastics.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <fstream>
+#include <cassert>
+#include <map>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <unordered_map>
+#include <climits>
+
+using namespace std;
+
+//bool ReadInFile(const string& sFile, int& nCows, int& data[])
+//{
+//    fstream in;
+//    in.open(sFile, ios::in);
+//    if (!in.is_open())
+//    {
+//        cout << "Error: cannot open input file." << endl;
+//        return false;
+//    }
+//
+//    int sessions;
+//
+//    cin >> sessions >> nCows;
+//
+//
+//      
+//
+//    return true;
+//}
+//
+//bool ReadInCout(vector<int>& petalOrder)
+//{
+//    ios::sync_with_stdio(0); cin.tie(0);
+//
+//    return true;
+//
+//}
+//
+//void Print(const vector<int> petalOrder)
+//{
+//
+//}
+
+int nCows = 0; int sessions = 0;
+int bonk[10][20];
+
+bool ahead(int cowa, int cowb, int sessionNum)
+{
+    int posa = 0; int posb = 0;
+    for (int i = 0; i < nCows; i++)
+    {
+        if (bonk[sessionNum][i] == cowa)
+        {
+            posa = i;
+        }
+
+        if (bonk[sessionNum][i] == cowb)
+        {
+            posb = i;
+        }
+    }
+
+    if (posa > posb)
+    {
+        return true;
+    }
+
+    else
+    {
+        return false;
+    }
+}
+
+int total(int cowa, int cowb)
+{
+    int count = 0; 
+
+    for (int i = 0; i < sessions; i++)
+    {
+        if (ahead(cowa, cowb, i) == true)
+        {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+bool WriteOut(const string& sFile, int maxN)
+{
+    cout << maxN << endl;
+
+    //
+    ofstream out_file;
+    out_file.open(sFile);
+    out_file << maxN << endl;
+
+
+    out_file.close();
+
+    return true;
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    fstream in;
+    in.open("gymnastics.in", ios::in);
+    if (!in.is_open())
+    {
+        cout << "Error: cannot open input file." << endl;
+        return false;
+    }
+
+    int ans = 0;
+
+    in >> sessions >> nCows;
+
+    for (int i = 0; i < sessions; i++)
+    {
+        for (int j = 0; j < nCows; j++)
+        {
+            in >> bonk[i][j];
+        }
+    }
+
+    for (int i = 1; i <= nCows; i++)
+    {
+        for (int j = 1; j <= nCows; j++)
+        {
+            if (total(i, j) == sessions)
+            {
+                ans++;
+            }
+        }
+    }
+
+    WriteOut("gymnastics.out", ans);
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
