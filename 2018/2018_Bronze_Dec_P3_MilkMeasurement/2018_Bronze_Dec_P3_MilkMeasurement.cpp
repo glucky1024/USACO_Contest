@@ -12,7 +12,7 @@
 using namespace std;
 
 
-bool ReadInFile(const string& sFile, vector<pair<int, int>>& nameChange)
+bool ReadInFile(const string& sFile, vector<pair<int, int>>& sus)
 {
     fstream in;
     in.open(sFile, ios::in);
@@ -24,12 +24,16 @@ bool ReadInFile(const string& sFile, vector<pair<int, int>>& nameChange)
 
     int nDays = 0;
     in >> nDays;
+    vector<int> order;
+    vector<pair<int, int>> nameChange;
 
     for (int i = 0; i < nDays; ++i)
     {
         int temp = 0, change = 0, realname = 0;
         string name;
         in >> temp >> name >> change;
+
+        order.push_back(temp);
 
         if (name == "Bessie")
         {
@@ -49,16 +53,29 @@ bool ReadInFile(const string& sFile, vector<pair<int, int>>& nameChange)
         nameChange.push_back(std::make_pair(realname, change));
     }
 
+    vector<pair<int, int>> present;
+
+    for (int i = 0; i < nDays; ++i) {
+        present.push_back(make_pair(order[i], i));
+    }
+
+    sort(present.begin(), present.end());
+
+    for (int i = 0; i < nDays; i++)
+    {
+        sus.push_back(std::make_pair(nameChange[present[i].second].first, nameChange[present[i].second].second));
+    }
+
     return true;
 }
 
-void Print(const vector<pair<int, int>> nameChange)
+void Print(const vector<pair<int, int>> sus)
 {
-    cout << nameChange.size() << endl;
+    cout << sus.size() << endl;
 
-    for (int i = 0; i < nameChange.size(); i++)
+    for (int i = 0; i < sus.size(); i++)
     {
-        cout << nameChange[i].first << " " << nameChange[i].second << endl;
+        cout << sus[i].first << " " << sus[i].second << endl;
     }
 
     cout << endl;
@@ -82,46 +99,47 @@ bool WriteOut(const string& sFile, const int ans)
     return true;
 }
 
-bool updated(vector<pair<int, int>> nameChange, vector<pair<int, int>> rates, int& prevLead)
+bool updated(vector<pair<int, int>> rates, int& prevMaxi, int& prevLead, int& prevCnt)
 {
-    int maxi = 0, leader = 5;
+    int maxi = 0, leader = 0, cnt = 0;
 
     for (int i = 0; i < 3; i++)
     {
         if (maxi < rates[i].second)
         {
+            maxi = rates[i].second;
             leader = i;
         }
     }
 
-    if (leader != prevLead)
-    {
-        prevLead = leader;
-        return true;
-    }
-
     for (int i = 0; i < 3; i++)
     {
-        if (maxi == rates[i].second && rates[i].second != prevLead)
+        if (maxi == rates[i].second)
         {
-            prevLead = leader;
-            return true;
+            cnt++;
         }
     }
 
+    if (leader != prevLead || cnt != prevCnt)
+    {
+        prevCnt = cnt;
+        prevMaxi = maxi;
+        prevLead = leader;
+        return true;
+    }
 
     return false;
 }
 
 int main()
 {
-    vector<pair<int, int>> nameChange;
-    int prevLead = 5;
+    vector<pair<int, int>> sus;
+    int prevLead = 5, prevMaxi = 0, prevCnt = 0;
 
-    bool bOk = ReadInFile("../measurement_bronze_dec17/1.in", nameChange);
-    //Print(nameChange);
+    bool bOk = ReadInFile("measurement.in", sus);
+    //Print(sus);
 
-    int changes = 0, nDays = nameChange.size();
+    int changes = 0, nDays = sus.size();
     vector<pair<int, int>> rates;
 
     for (int i = 0; i < 3; i++)
@@ -131,29 +149,24 @@ int main()
 
     for (int i = 0; i < nDays; i++)
     {
-        if (nameChange[i].first == 0)
+        if (sus[i].first == 0)
         {
-            rates[0].second += nameChange[i].second;
+            rates[0].second += sus[i].second;
         }
 
-        else if (nameChange[i].first == 1)
+        else if (sus[i].first == 1)
         {
-            rates[1].second += nameChange[i].second;
+            rates[1].second += sus[i].second;
         }
         else
         {
-            rates[2].second += nameChange[i].second;
+            rates[2].second += sus[i].second;
         }
 
-        if (updated(nameChange, rates, prevLead))
+        if (updated(rates, prevMaxi, prevLead, prevCnt))
         {
             changes++;
         }
-    }
-
-    for (int i = 0; i < 3; i++)
-    {
-        cout << rates[i].first << " " << rates[i].second << endl;
     }
 
     WriteOut("measurement.out", changes);
