@@ -7,7 +7,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="2024_Bronze_Dec_P3.cpp">
+    <ClCompile Include="2024DecBronzeP1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
