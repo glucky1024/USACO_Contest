@@ -121,8 +121,6 @@ int main()
     //ReadInCout(startCow, endCow, changeCow, startAir, endAir, changeAir, money);
     Print(startCow, endCow, changeCow, startAir, endAir, changeAir, money);
 
-    for(int i =0; i <)
-
     int ans = 0;
 
     //WriteOut("marathon.out", ans);
