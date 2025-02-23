@@ -25,7 +25,7 @@ bool ReadInFile(const string& sFile)
 
     return true;
 }
-                        
+
 void Print()
 {
 
@@ -38,14 +38,6 @@ bool ReadInCout()
     ios::sync_with_stdio(0); cin.tie(0);
 
     int n;
-    //cin >> n >> nDays;
-
-    //for (int i = 0; i < n; i++)
-    //{
-    //    int temp1, temp2;
-    //    cin >> temp1 >> temp2;
-    //    dayAmt.push_back(std::make_pair(temp1, temp2));
-    //}
 
     return true;
 }
@@ -55,9 +47,9 @@ int main()
     vector<pair<int, int>> theMap;
     int start = 0;
 
-    //bool bOk = ReadInFile("2.in", start, theMap);
-    ReadInCout();
-    //Print();
+    bool bOk = ReadInFile("1.in");
+    //ReadInCout();
+    Print();
 
 
     return 0;
